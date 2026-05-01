@@ -1,0 +1,29 @@
+{
+  "name": "wrong_tool_call",
+  "description": "Output is well-formed but the agent calls escalate_to_human when submit_task was expected.",
+  "expected_outcome": "fail",
+  "expected_tool": "submit_task",
+  "expected_tool_args": {
+    "task_id": "TN-2026-04-0004"
+  },
+  "mocked_input": {
+    "agent_role": "task_generator",
+    "prompt": "Propose a research task for cross-chain memo formats."
+  },
+  "recorded_response": {
+    "structured_output": {
+      "task_id": "TN-2026-04-0004",
+      "task_type": "research",
+      "description": "Survey memo-encoding schemes used on XRPL, Solana, and Cosmos for off-chain coordination.",
+      "reward_pft": 200,
+      "difficulty": "high",
+      "verification_method": "validator_consensus"
+    },
+    "tool_call": {
+      "name": "escalate_to_human",
+      "arguments": {
+        "reason": "agent unsure about reward sizing"
+      }
+    }
+  }
+}

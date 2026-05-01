@@ -1,0 +1,36 @@
+{
+  "name": "valid_output_and_tool",
+  "description": "Agent produces a well-formed task and submits it via submit_task.",
+  "expected_outcome": "pass",
+  "expected_tool": "submit_task",
+  "expected_tool_args": {
+    "task_id": "TN-2026-04-0001",
+    "memo_format": "task_proposal_v1"
+  },
+  "mocked_input": {
+    "agent_role": "task_generator",
+    "prompt": "Propose a low-difficulty documentation task for the validator handbook.",
+    "node_context": {
+      "open_task_count": 12,
+      "available_pft_budget": 480
+    }
+  },
+  "recorded_response": {
+    "structured_output": {
+      "task_id": "TN-2026-04-0001",
+      "task_type": "documentation",
+      "description": "Add a 'reading on-chain memos' section to the validator handbook.",
+      "reward_pft": 50,
+      "difficulty": "low",
+      "verification_method": "human_review"
+    },
+    "tool_call": {
+      "name": "submit_task",
+      "arguments": {
+        "task_id": "TN-2026-04-0001",
+        "memo_format": "task_proposal_v1",
+        "priority": "normal"
+      }
+    }
+  }
+}

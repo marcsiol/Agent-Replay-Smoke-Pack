@@ -1,0 +1,29 @@
+{
+  "name": "missing_required_field",
+  "description": "Agent omits verification_method, which is required by the contract.",
+  "expected_outcome": "fail",
+  "expected_tool": "submit_task",
+  "expected_tool_args": {
+    "task_id": "TN-2026-04-0003"
+  },
+  "mocked_input": {
+    "agent_role": "task_generator",
+    "prompt": "Propose a data-labeling task for the funding-rate dataset."
+  },
+  "recorded_response": {
+    "structured_output": {
+      "task_id": "TN-2026-04-0003",
+      "task_type": "data_labeling",
+      "description": "Label the last 30 days of perp funding-rate spikes as expected vs anomalous.",
+      "reward_pft": 75,
+      "difficulty": "medium"
+    },
+    "tool_call": {
+      "name": "submit_task",
+      "arguments": {
+        "task_id": "TN-2026-04-0003",
+        "memo_format": "task_proposal_v1"
+      }
+    }
+  }
+}

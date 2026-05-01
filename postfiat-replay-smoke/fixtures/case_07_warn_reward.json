@@ -1,0 +1,30 @@
+{
+  "name": "suspicious_reward_warn",
+  "description": "Task is structurally valid but reward_pft is unusually large — should produce a warn-level finding for human review, not a hard fail.",
+  "expected_outcome": "warn",
+  "expected_tool": "submit_task",
+  "expected_tool_args": {
+    "task_id": "TN-2026-04-0007"
+  },
+  "mocked_input": {
+    "agent_role": "task_generator",
+    "prompt": "Propose a high-difficulty validator audit task."
+  },
+  "recorded_response": {
+    "structured_output": {
+      "task_id": "TN-2026-04-0007",
+      "task_type": "validation",
+      "description": "Full security audit of the validator-AI scoring pipeline including replay-attack surface.",
+      "reward_pft": 9500,
+      "difficulty": "high",
+      "verification_method": "validator_consensus"
+    },
+    "tool_call": {
+      "name": "submit_task",
+      "arguments": {
+        "task_id": "TN-2026-04-0007",
+        "memo_format": "task_proposal_v1"
+      }
+    }
+  }
+}

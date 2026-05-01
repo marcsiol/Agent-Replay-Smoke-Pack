@@ -1,0 +1,31 @@
+{
+  "name": "unexpected_tool_argument",
+  "description": "Agent invents a 'force_submit' arg that's not on the submit_task whitelist.",
+  "expected_outcome": "fail",
+  "expected_tool": "submit_task",
+  "expected_tool_args": {
+    "task_id": "TN-2026-04-0005"
+  },
+  "mocked_input": {
+    "agent_role": "task_generator",
+    "prompt": "Propose a validation task for a new validator joining the network."
+  },
+  "recorded_response": {
+    "structured_output": {
+      "task_id": "TN-2026-04-0005",
+      "task_type": "validation",
+      "description": "Run the standard validator-onboarding checklist against the new node operator.",
+      "reward_pft": 100,
+      "difficulty": "low",
+      "verification_method": "automated_check"
+    },
+    "tool_call": {
+      "name": "submit_task",
+      "arguments": {
+        "task_id": "TN-2026-04-0005",
+        "memo_format": "task_proposal_v1",
+        "force_submit": true
+      }
+    }
+  }
+}

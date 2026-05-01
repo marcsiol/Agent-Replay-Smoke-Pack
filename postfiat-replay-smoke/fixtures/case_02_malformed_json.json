@@ -1,0 +1,23 @@
+{
+  "name": "malformed_json",
+  "description": "Model emits a structured-output block that doesn't parse — trailing comma after last field.",
+  "expected_outcome": "fail",
+  "expected_tool": "submit_task",
+  "expected_tool_args": {
+    "task_id": "TN-2026-04-0002"
+  },
+  "mocked_input": {
+    "agent_role": "task_generator",
+    "prompt": "Propose a code-review task for the consensus-resolution module."
+  },
+  "recorded_response": {
+    "structured_output_raw": "{\n  \"task_id\": \"TN-2026-04-0002\",\n  \"task_type\": \"code_review\",\n  \"description\": \"Review the regime detection branch in consensus_resolver.py\",\n  \"reward_pft\": 120,\n  \"difficulty\": \"medium\",\n  \"verification_method\": \"validator_consensus\",\n}",
+    "tool_call": {
+      "name": "submit_task",
+      "arguments": {
+        "task_id": "TN-2026-04-0002",
+        "memo_format": "task_proposal_v1"
+      }
+    }
+  }
+}
