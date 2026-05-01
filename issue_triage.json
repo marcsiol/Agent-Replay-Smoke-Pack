@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "description": "Compact triage table for AI-tooling issues surfaced against the Post Fiat agent harness. Categories let reviewers tag findings consistently instead of debating each one.",
+  "categories": {
+    "blocker": "Prevents the agent from producing auditable output at all. Ship-stopping; must be fixed before the surface can be re-enabled.",
+    "maintenance": "Real but non-blocking. Schema drift, deprecated tool args, slowly degrading behavior. Goes on the backlog.",
+    "duplicate": "Already filed under another tracking ID. Close and link to the canonical issue; do not re-investigate.",
+    "unclear": "Insufficient information to act. Needs reproduction steps, a fixture, or a clearer policy decision before it can be categorized further."
+  },
+  "issues": [
+    {
+      "id": "PFT-AI-101",
+      "category": "blocker",
+      "title": "Agent emits malformed JSON when reward_pft exceeds 4 digits",
+      "fixture_ref": "case_02_malformed_json.json",
+      "notes": "Reproduces deterministically. Blocks all submit_task calls above the threshold; downstream consensus has nothing to read."
+    },
+    {
+      "id": "PFT-AI-102",
+      "category": "blocker",
+      "title": "Agent calls escalate_to_human in place of submit_task on routine prompts",
+      "fixture_ref": "case_04_wrong_tool.json",
+      "notes": "Wrong-tool dispatch under normal load. Without this fix, no tasks get on-chain even when the agent's structured output is fine."
+    },
+    {
+      "id": "PFT-AI-201",
+      "category": "maintenance",
+      "title": "submit_task accepts a 'priority' arg that is currently ignored downstream",
+      "fixture_ref": "case_01_valid.json",
+      "notes": "Whitelisted but unused. Either wire it up or remove from the allowed set; today it's just contract surface area with no effect."
+    },
+    {
+      "id": "PFT-AI-202",
+      "category": "maintenance",
+      "title": "reward_pft warning threshold (10000) hardcoded; should follow node budget",
+      "fixture_ref": "case_07_warn_reward.json",
+      "notes": "Threshold should track available_pft_budget from node_context, not a constant in contract.py."
+    },
+    {
+      "id": "PFT-AI-301",
+      "category": "duplicate",
+      "title": "Agent invents force_submit argument",
+      "fixture_ref": "case_05_unexpected_arg.json",
+      "duplicate_of": "PFT-AI-088",
+      "notes": "Same root cause as the earlier 'agent hallucinates override flags' report. Close and link."
+    },
+    {
+      "id": "PFT-AI-401",
+      "category": "unclear",
+      "title": "Intermittent missing verification_method on data_labeling tasks",
+      "fixture_ref": "case_03_missing_field.json",
+      "notes": "Reported once, no consistent reproduction. Need three more replays at the same temperature before this can be promoted to blocker or maintenance."
+    }
+  ]
+}

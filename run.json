@@ -1,0 +1,152 @@
+{
+  "cases": [
+    {
+      "actual_outcome": "pass",
+      "expected_outcome": "pass",
+      "findings": [],
+      "fixture": "case_01_valid.json",
+      "matched": true,
+      "name": "valid_output_and_tool"
+    },
+    {
+      "actual_outcome": "fail",
+      "expected_outcome": "fail",
+      "findings": [
+        {
+          "code": "STRUCT_INVALID_JSON",
+          "message": "structured_output_raw is not valid JSON: Expecting property name enclosed in double quotes",
+          "severity": "fail"
+        }
+      ],
+      "fixture": "case_02_malformed_json.json",
+      "matched": true,
+      "name": "malformed_json"
+    },
+    {
+      "actual_outcome": "fail",
+      "expected_outcome": "fail",
+      "findings": [
+        {
+          "code": "STRUCT_MISSING_FIELD",
+          "message": "missing required field: verification_method",
+          "severity": "fail"
+        }
+      ],
+      "fixture": "case_03_missing_field.json",
+      "matched": true,
+      "name": "missing_required_field"
+    },
+    {
+      "actual_outcome": "fail",
+      "expected_outcome": "fail",
+      "findings": [
+        {
+          "code": "TOOL_WRONG_NAME",
+          "message": "expected tool 'submit_task', got 'escalate_to_human'",
+          "severity": "fail"
+        }
+      ],
+      "fixture": "case_04_wrong_tool.json",
+      "matched": true,
+      "name": "wrong_tool_call"
+    },
+    {
+      "actual_outcome": "fail",
+      "expected_outcome": "fail",
+      "findings": [
+        {
+          "code": "TOOL_UNEXPECTED_ARG",
+          "message": "submit_task: unexpected argument 'force_submit' (allowed: ['memo_format', 'priority', 'task_id'])",
+          "severity": "fail"
+        }
+      ],
+      "fixture": "case_05_unexpected_arg.json",
+      "matched": true,
+      "name": "unexpected_tool_argument"
+    },
+    {
+      "actual_outcome": "pass",
+      "expected_outcome": "pass",
+      "findings": [],
+      "fixture": "case_06_refusal.json",
+      "matched": true,
+      "name": "refusal_escalation"
+    },
+    {
+      "actual_outcome": "warn",
+      "expected_outcome": "warn",
+      "findings": [
+        {
+          "code": "STRUCT_SUSPICIOUS",
+          "message": "reward_pft=9500 unusually large; review before submission",
+          "severity": "warn"
+        }
+      ],
+      "fixture": "case_07_warn_reward.json",
+      "matched": true,
+      "name": "suspicious_reward_warn"
+    }
+  ],
+  "contract": "post_fiat.task_node.task_generation/v1",
+  "harness_version": "1.0.0",
+  "summary": {
+    "matched": 7,
+    "mismatched": 0,
+    "total": 7
+  },
+  "triage": {
+    "categories": {
+      "blocker": "Prevents the agent from producing auditable output at all. Ship-stopping; must be fixed before the surface can be re-enabled.",
+      "duplicate": "Already filed under another tracking ID. Close and link to the canonical issue; do not re-investigate.",
+      "maintenance": "Real but non-blocking. Schema drift, deprecated tool args, slowly degrading behavior. Goes on the backlog.",
+      "unclear": "Insufficient information to act. Needs reproduction steps, a fixture, or a clearer policy decision before it can be categorized further."
+    },
+    "description": "Compact triage table for AI-tooling issues surfaced against the Post Fiat agent harness. Categories let reviewers tag findings consistently instead of debating each one.",
+    "issues": [
+      {
+        "category": "blocker",
+        "fixture_ref": "case_02_malformed_json.json",
+        "id": "PFT-AI-101",
+        "notes": "Reproduces deterministically. Blocks all submit_task calls above the threshold; downstream consensus has nothing to read.",
+        "title": "Agent emits malformed JSON when reward_pft exceeds 4 digits"
+      },
+      {
+        "category": "blocker",
+        "fixture_ref": "case_04_wrong_tool.json",
+        "id": "PFT-AI-102",
+        "notes": "Wrong-tool dispatch under normal load. Without this fix, no tasks get on-chain even when the agent's structured output is fine.",
+        "title": "Agent calls escalate_to_human in place of submit_task on routine prompts"
+      },
+      {
+        "category": "maintenance",
+        "fixture_ref": "case_01_valid.json",
+        "id": "PFT-AI-201",
+        "notes": "Whitelisted but unused. Either wire it up or remove from the allowed set; today it's just contract surface area with no effect.",
+        "title": "submit_task accepts a 'priority' arg that is currently ignored downstream"
+      },
+      {
+        "category": "maintenance",
+        "fixture_ref": "case_07_warn_reward.json",
+        "id": "PFT-AI-202",
+        "notes": "Threshold should track available_pft_budget from node_context, not a constant in contract.py.",
+        "title": "reward_pft warning threshold (10000) hardcoded; should follow node budget"
+      },
+      {
+        "category": "duplicate",
+        "duplicate_of": "PFT-AI-088",
+        "fixture_ref": "case_05_unexpected_arg.json",
+        "id": "PFT-AI-301",
+        "notes": "Same root cause as the earlier 'agent hallucinates override flags' report. Close and link.",
+        "title": "Agent invents force_submit argument"
+      },
+      {
+        "category": "unclear",
+        "fixture_ref": "case_03_missing_field.json",
+        "id": "PFT-AI-401",
+        "notes": "Reported once, no consistent reproduction. Need three more replays at the same temperature before this can be promoted to blocker or maintenance.",
+        "title": "Intermittent missing verification_method on data_labeling tasks"
+      }
+    ],
+    "schema_version": "1.0"
+  }
+}
